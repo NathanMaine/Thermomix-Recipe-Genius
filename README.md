@@ -1,0 +1,190 @@
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+</div>
+
+# Thermomix Recipe Genius
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+
+An intelligent web application that leverages Google's Gemini AI to generate brand-new recipes optimized for the Thermomix TM6 or convert any existing recipe into a Thermomix-compatible format. Get detailed, step-by-step instructions tailored for your smart kitchen appliance.
+
+## ✨ Features
+
+- **Recipe Generation**: Create original recipes from simple descriptions (e.g., "creamy tomato soup")
+- **Recipe Conversion**: Transform any web recipe or pasted text into Thermomix instructions
+- **Thermomix TM6 Optimized**: All recipes include specific speed settings, temperatures, and durations
+- **Modern UI**: Clean, responsive interface built with React and Tailwind CSS
+- **Real-time AI**: Powered by Google's Gemini 2.5 Flash model for accurate, contextual recipes
+- **Type-Safe**: Fully typed with TypeScript for reliability
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Node.js** (version 18 or higher)
+- **Google Gemini API Key** - Get one from [Google AI Studio](https://ai.studio.google.com/)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/thermomix-recipe-genius.git
+   cd thermomix-recipe-genius
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env.local
+   ```
+   Edit `.env.local` and add your Gemini API key:
+   ```
+   GEMINI_API_KEY=your_actual_api_key_here
+   ```
+
+4. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+## 📖 Usage
+
+### Generating a New Recipe
+1. Click on the "Generate Recipe" tab
+2. Enter a description of the dish you want (e.g., "Gluten-free chocolate cake")
+3. Click "Create Recipe"
+4. View your AI-generated Thermomix recipe with step-by-step instructions
+
+### Converting an Existing Recipe
+1. Click on the "Convert Recipe" tab
+2. Paste either:
+   - The full text of a recipe
+   - A URL to a recipe webpage
+3. Click "Create Recipe"
+4. Get a Thermomix-adapted version with optimized settings
+
+## 🛠️ Development
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build locally
+
+### Project Structure
+
+```
+thermomix-recipe-genius/
+├── components/           # React components
+│   ├── Icons.tsx        # SVG icon components
+│   ├── LoadingSpinner.tsx # Loading animation
+│   └── RecipeDisplay.tsx # Recipe display component
+├── services/            # API services
+│   └── geminiService.ts # Gemini AI integration
+├── types.ts            # TypeScript type definitions
+├── App.tsx             # Main application component
+├── index.tsx           # Application entry point
+└── index.html          # HTML template
+```
+
+### Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `GEMINI_API_KEY` | Your Google Gemini API key | Yes |
+
+## 🔧 Configuration
+
+The app uses structured output from Gemini AI to ensure consistent recipe formatting. The schema includes:
+- Recipe title and description
+- Servings and total time
+- Ingredient list with amounts
+- Step-by-step instructions with Thermomix settings
+
+## 🚀 Deployment
+
+### Build for Production
+
+```bash
+npm run build
+```
+
+The built files will be in the `dist/` directory, ready for deployment to any static hosting service.
+
+### Environment Setup for Production
+
+Ensure your production environment has the `GEMINI_API_KEY` set. For client-side applications, consider using environment variables or a backend proxy for API keys.
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## ⚠️ Important Notes
+
+- **API Key Security**: Never commit your actual Gemini API key to version control. Use `.env.local` and ensure it's in `.gitignore`.
+- **AI Limitations**: Recipes are generated by AI and should be reviewed for safety and accuracy before use.
+- **Thermomix Compatibility**: Recipes are optimized for TM6 but may work on other models with adjustments.
+
+## 🆘 Troubleshooting
+
+### Common Issues
+
+**"API_KEY environment variable not set"**
+- Ensure you've created `.env.local` and added your Gemini API key
+- Restart the development server after adding the key
+
+**Build fails**
+- Ensure Node.js version 18+
+- Run `npm install` to ensure all dependencies are installed
+
+**Recipes not generating**
+- Check your internet connection
+- Verify your Gemini API key is valid and has quota remaining
+
+## 🙏 Acknowledgments
+
+- Powered by [Google Gemini AI](https://ai.google.dev/)
+- Built with [React](https://reactjs.org/) and [Vite](https://vitejs.dev/)
+- Styled with [Tailwind CSS](https://tailwindcss.com/)
+
+---
+
+Made with ❤️ for Thermomix enthusiasts
+<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+</div>
+
+# Run and deploy your AI Studio app
+
+This contains everything you need to run your app locally.
+
+View your app in AI Studio: https://ai.studio/apps/drive/1oZ529F_sBMwWKx7A1mFAtXo9eiy7qTxX
+
+## Run Locally
+
+**Prerequisites:**  Node.js
+
+
+1. Install dependencies:
+   `npm install`
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
+   `npm run dev`
