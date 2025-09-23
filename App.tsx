@@ -151,6 +151,7 @@ const App: React.FC = () => {
             <div className="flex justify-between items-center mb-4">
               <h1 className="text-4xl font-bold text-gray-800">
                 Thermomix Recipe <span className="text-green-600">Genius</span>
+                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded ml-2">Weight-Based</span>
               </h1>
               <div className="flex items-center gap-3">
                 <span className="text-sm text-gray-600">Welcome, {currentUser?.username}</span>
@@ -162,7 +163,7 @@ const App: React.FC = () => {
                 </button>
               </div>
             </div>
-            <p className="text-gray-500">Your smart culinary assistant for the TM6</p>
+            <p className="text-gray-500">Your smart culinary assistant for the TM6 - Precision Weight Measurements</p>
           </header>
 
           <div className="flex border-b mb-6">
@@ -227,7 +228,7 @@ const App: React.FC = () => {
                     id="generate-input"
                     value={generateInput}
                     onChange={(e) => setGenerateInput(e.target.value)}
-                    placeholder="e.g., Creamy tomato soup, Gluten-free chocolate cake, Chicken and mushroom risotto..."
+                    placeholder="e.g., Chocolate cake (200g flour, 150g sugar), Pasta carbonara (400g pasta, 200g pancetta), Vegetable stir-fry (500g mixed vegetables)..."
                     className="w-full flex-grow p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-shadow resize-none"
                     rows={10}
                   />

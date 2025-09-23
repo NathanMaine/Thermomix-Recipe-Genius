@@ -1,7 +1,8 @@
 {
-  "name": "thermomix-recipe-genius",
+  "name": "thermomix-recipe-genius-weight-based",
   "private": true,
   "version": "0.0.0",
+  "description": "Thermomix Recipe Genius - Weight-Based Edition: Precision weight measurements for professional cooking",
   "type": "module",
   "scripts": {
     "dev": "vite",

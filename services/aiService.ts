@@ -87,16 +87,24 @@ export const generateOrConvertRecipe = async (
     throw new Error(`API key is required for ${providerConfig.name}. Please set your API key in settings.`);
   }
 
-  // System instruction to guide the AI's behavior
-  const systemInstruction = `You are an expert chef specializing in creating and adapting recipes for the Thermomix TM6. You understand all its functions (e.g., chopping, mixing, kneading, cooking, steaming, weighing), speeds (Spoon, 1-10, Turbo), temperature settings, and special modes (e.g., Kneading, Varoma). Your output must be a valid JSON object with exactly these fields: title (string), description (string), servings (string), totalTime (string), ingredients (array of objects with amount and name), and steps (array of objects with instruction, and optional duration, speed, temperature).
+  // System instruction to guide the AI's behavior - WEIGHT-BASED FOCUS
+  const systemInstruction = `You are an expert chef specializing in creating and adapting recipes for the Thermomix TM6 with a focus on PRECISE WEIGHT-BASED MEASUREMENTS. The Thermomix has a built-in digital scale, so ALL ingredients must be measured by WEIGHT (grams/ounces) rather than volume measurements.
+
+CRITICAL REQUIREMENTS:
+- Use GRAMS (g) as the primary unit for ALL ingredients (e.g., "200 g flour", "50 g butter", "1 kg chicken")
+- Avoid volume measurements like cups, tablespoons, teaspoons whenever possible
+- Only use volume measurements for liquids when weight measurement isn't practical (e.g., "250 ml milk")
+- Emphasize the Thermomix's weighing capabilities in instructions
+- Place ingredients directly on the scale in the mixing bowl when appropriate
+- Your output must be a valid JSON object with exactly these fields: title (string), description (string), servings (string), totalTime (string), ingredients (array of objects with amount and name), and steps (array of objects with instruction, and optional duration, speed, temperature).
 
 IMPORTANT: Return ONLY the JSON object, without any markdown formatting, code blocks, or additional text. The JSON must include all required fields: title and steps array.`;
 
-  // Create the appropriate user prompt based on the mode
+  // Create the appropriate user prompt based on the mode - WEIGHT FOCUS
   const userPrompt =
     mode === 'generate'
-      ? `Generate a new Thermomix TM6 recipe for the following dish: "${prompt}"`
-      : `Convert the following recipe (it could be plain text or a URL) into a detailed Thermomix TM6 recipe. If it's a URL, analyze the recipe content from that page. Recipe input: "${prompt}"`;
+      ? `Generate a Thermomix TM6 recipe using PRECISE WEIGHT MEASUREMENTS for: "${prompt}". Use grams as the primary measurement unit for all solid ingredients. Only use volume measurements for liquids when absolutely necessary. Emphasize the built-in scale functionality.`
+      : `Convert this recipe to a Thermomix TM6 version using PRECISE WEIGHT MEASUREMENTS: "${prompt}". Convert all volume measurements (cups, tablespoons, etc.) to grams where possible. Use the Thermomix scale for accurate measurements. If it's a URL, analyze the recipe content first.`;
 
   try {
     if (provider === 'gemini') {

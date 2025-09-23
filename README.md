@@ -2,37 +2,42 @@
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# Thermomix Recipe Genius
+# Thermomix Recipe Genius - Weight-Based Edition
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 
-An intelligent web application that leverages Google's Gemini AI to generate brand-new recipes optimized for the Thermomix TM6 or convert any existing recipe into a Thermomix-compatible format. Get detailed, step-by-step instructions tailored for your smart kitchen appliance.
+An intelligent web application that leverages AI to generate brand-new recipes optimized for the Thermomix TM6 with **precision weight-based measurements**. All recipes emphasize the Thermomix's built-in digital scale for accurate, professional-grade cooking.
 
 ## ✨ Features
 
-- **Recipe Generation**: Create original recipes from simple descriptions (e.g., "creamy tomato soup")
-- **Recipe Conversion**: Transform any web recipe or pasted text into Thermomix instructions
-- **Thermomix TM6 Optimized**: All recipes include specific speed settings, temperatures, and durations
-- **Modern UI**: Clean, responsive interface built with React and Tailwind CSS
-- **Real-time AI**: Powered by Google's Gemini 1.5 Pro model for accurate, contextual recipes
-- **Type-Safe**: Fully typed with TypeScript for reliability
+- **🎯 Weight-Based Precision**: All recipes use grams/ounces as primary measurements
+- **🤖 Multi-Provider AI**: Choose between Google Gemini and xAI Grok
+- **⚖️ Scale-Optimized**: Instructions designed for Thermomix's built-in weighing system
+- **🔄 Recipe Generation**: Create original recipes from simple descriptions
+- **📋 Recipe Conversion**: Transform any recipe into weight-based Thermomix format
+- **🎛️ TM6 Optimized**: Specific speed settings, temperatures, and durations
+- **🧪 API Testing**: Built-in functionality to test your API keys
+- **💾 Recipe Storage**: Save and manage your favorite recipes
+- **📱 Modern UI**: Clean, responsive interface built with React and Tailwind CSS
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
 - **Node.js** (version 18 or higher)
-- **Google Gemini API Key** - Get one from [Google AI Studio](https://ai.studio.google.com/)
+- **AI API Key** - Choose one:
+  - **Google Gemini API Key** - Get one from [Google AI Studio](https://ai.studio.google.com/)
+  - **xAI Grok API Key** - Get one from [xAI Console](https://console.x.ai/)
 
 ### Installation
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/thermomix-recipe-genius.git
-   cd thermomix-recipe-genius
+   git clone https://github.com/yourusername/thermomix-recipe-genius-weight-based.git
+   cd thermomix-recipe-genius-weight-based
    ```
 
 2. **Install dependencies**
@@ -40,37 +45,50 @@ An intelligent web application that leverages Google's Gemini AI to generate bra
    npm install
    ```
 
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env.local
-   ```
-   Edit `.env.local` and add your Gemini API key:
-   ```
-   GEMINI_API_KEY=your_actual_api_key_here
-   ```
-
-4. **Start the development server**
+3. **Start the development server**
    ```bash
    npm run dev
    ```
 
-5. Open [http://localhost:3000](http://localhost:3000) in your browser
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+5. **Set up your API key**
+   - Go to Profile → Settings
+   - Choose your preferred AI provider (Gemini or Grok)
+   - Enter your API key
+   - Click "Test API" to verify it works
 
 ## 📖 Usage
 
+### 🎯 Weight-Based Recipe Generation
+This fork specializes in **precision weight measurements** using the Thermomix's built-in digital scale:
+
+- **All solid ingredients** measured in **grams** (e.g., "200g flour", "150g butter")
+- **Liquids** measured in **milliliters** when weight isn't practical
+- **Scale utilization** emphasized in cooking instructions
+- **Professional precision** for consistent results
+
 ### Generating a New Recipe
 1. Click on the "Generate Recipe" tab
-2. Enter a description of the dish you want (e.g., "Gluten-free chocolate cake")
-3. Click "Create Recipe"
-4. View your AI-generated Thermomix recipe with step-by-step instructions
+2. Enter a description with weight expectations (e.g., "Chocolate cake with 200g flour and 150g sugar")
+3. Select your AI provider (Gemini or Grok)
+4. Click "Create Recipe"
+5. Get a weight-optimized Thermomix recipe with precise measurements
 
 ### Converting an Existing Recipe
 1. Click on the "Convert Recipe" tab
 2. Paste either:
-   - The full text of a recipe
+   - The full text of a recipe (with cups/tablespoons)
    - A URL to a recipe webpage
 3. Click "Create Recipe"
-4. Get a Thermomix-adapted version with optimized settings
+4. Receive a weight-based Thermomix adaptation with gram measurements
+
+### Managing API Keys
+- Go to Profile → Settings
+- Choose between Gemini and Grok providers
+- Enter your API key for the selected provider
+- Use "Test API" to verify functionality
+- Switch providers anytime for comparison
 
 ## 🛠️ Development
 
