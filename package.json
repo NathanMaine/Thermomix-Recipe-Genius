@@ -1,8 +1,8 @@
 {
-  "name": "thermomix-recipe-genius-weight-based",
+  "name": "thermomix-recipe-genius",
   "private": true,
   "version": "0.0.0",
-  "description": "Thermomix Recipe Genius - Weight-Based Edition: Precision weight measurements for professional cooking",
+  "description": "Thermomix Recipe Genius: AI-powered recipe generation with precision weight measurements for Thermomix TM6",
   "type": "module",
   "scripts": {
     "dev": "vite",

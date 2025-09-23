@@ -2,14 +2,44 @@
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
 </div>
 
-# Thermomix Recipe Genius - Weight-Based Edition
+# Thermomix Recipe Genius
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 
-An intelligent web application that leverages AI to generate brand-new recipes optimized for the Thermomix TM6 with **precision weight-based measurements**. All recipes emphasize the Thermomix's built-in digital scale for accurate, professional-grade cooking.
+An intelligent web application that leverages AI to generate and convert recipes optimized for the Thermomix TM6 with **precision weight-based measurements**. All recipes emphasize the Thermomix's built-in digital scale for accurate, professional-grade cooking.
+
+## 🤖 How the App Works
+
+### Recipe Generation
+The app uses AI (Gemini or Grok) to generate recipes with a strong emphasis on **weight-based measurements** (grams/ounces) rather than volume.
+
+### System Instructions
+The AI is specifically instructed to:
+- Use grams as the primary unit for ALL ingredients (e.g., "200 g flour", "50 g butter")
+- Emphasize the Thermomix's built-in digital scale
+- Avoid volume measurements when possible
+- Place ingredients directly on the scale in the mixing bowl
+
+### Recipe Structure
+- **Ingredients**: Listed with precise weight amounts (e.g., "200 g all-purpose flour")
+- **Steps**: Include instructions that reference weighing, but these are text-based only
+
+### The Thermomix TM6 Reality
+- **Built-in Scale**: The TM6 does have an integrated digital scale in the mixing bowl
+- **Manual Process**: Users must physically place ingredients on the scale and add them until the target weight is reached
+- **No App Integration**: The web app has **no direct connection** to the physical Thermomix device
+
+### What Actually Happens
+1. The app generates recipes like: "Add 200 g flour to the mixing bowl"
+2. The user reads this on their screen
+3. The user manually places the mixing bowl on the scale and adds flour until it shows 200g
+4. The Thermomix then uses its other functions (mixing, cooking, etc.) based on the recipe steps
+
+### Conclusion
+The app successfully creates **weight-focused recipes** that are optimized for the Thermomix's scale capabilities. However, the actual weighing process requires **manual user interaction** with the physical device - the app provides the instructions, but doesn't automate the weighing itself.
 
 ## ✨ Features
 
@@ -22,6 +52,17 @@ An intelligent web application that leverages AI to generate brand-new recipes o
 - **🧪 API Testing**: Built-in functionality to test your API keys
 - **💾 Recipe Storage**: Save and manage your favorite recipes
 - **📱 Modern UI**: Clean, responsive interface built with React and Tailwind CSS
+
+## 🚀 Future Versions
+
+We're planning exciting enhancements to bring Thermomix Recipe Genius even closer to seamless integration:
+
+- **🖥️ Official Software Integration**: Direct connection with Thermomix's official Cookidoo platform
+- **📤 Recipe Upload**: Automatically add generated recipes to your Thermomix online account
+- **🔌 Hardware API**: Real-time weighing data and automated recipe execution
+- **📱 Mobile App**: Native iOS/Android apps with enhanced Thermomix connectivity
+- **🤖 Smart Scaling**: AI-powered recipe scaling based on available ingredients
+- **📊 Nutrition Tracking**: Integration with nutrition databases for complete meal analysis
 
 ## 🚀 Quick Start
 
