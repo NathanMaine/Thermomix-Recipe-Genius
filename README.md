@@ -77,8 +77,8 @@ We're planning exciting enhancements to bring Thermomix Recipe Genius even close
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/thermomix-recipe-genius-weight-based.git
-   cd thermomix-recipe-genius-weight-based
+   git clone https://github.com/yourusername/thermomix-recipe-genius.git
+   cd thermomix-recipe-genius
    ```
 
 2. **Install dependencies**
@@ -146,9 +146,14 @@ thermomix-recipe-genius/
 ├── components/           # React components
 │   ├── Icons.tsx        # SVG icon components
 │   ├── LoadingSpinner.tsx # Loading animation
-│   └── RecipeDisplay.tsx # Recipe display component
+│   ├── RecipeDisplay.tsx # Recipe display component
+│   ├── LoginForm.tsx    # User authentication
+│   ├── Profile.tsx      # User profile management
+│   └── SettingsModal.tsx # API key settings
 ├── services/            # API services
-│   └── geminiService.ts # Gemini AI integration
+│   ├── aiService.ts     # Multi-provider AI integration (Gemini & Grok)
+│   ├── authService.ts   # User authentication & storage
+│   └── geminiService.ts # Legacy Gemini service
 ├── types.ts            # TypeScript type definitions
 ├── App.tsx             # Main application component
 ├── index.tsx           # Application entry point

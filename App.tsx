@@ -151,7 +151,6 @@ const App: React.FC = () => {
             <div className="flex justify-between items-center mb-4">
               <h1 className="text-4xl font-bold text-gray-800">
                 Thermomix Recipe <span className="text-green-600">Genius</span>
-                <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded ml-2">Weight-Based</span>
               </h1>
               <div className="flex items-center gap-3">
                 <span className="text-sm text-gray-600">Welcome, {currentUser?.username}</span>
