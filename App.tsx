@@ -46,10 +46,13 @@ const App: React.FC = () => {
   };
 
   const handleApiKeyChanged = () => {
+    console.log('handleApiKeyChanged called');
     const user = getCurrentUser();
+    console.log('Current user from localStorage:', user);
     setCurrentUser(user);
     if (user) {
       setSelectedProvider(user.defaultProvider);
+      console.log('Selected provider updated to:', user.defaultProvider);
     }
   };
 

@@ -88,7 +88,9 @@ export const generateOrConvertRecipe = async (
   }
 
   // System instruction to guide the AI's behavior
-  const systemInstruction = `You are an expert chef specializing in creating and adapting recipes for the Thermomix TM6. You understand all its functions (e.g., chopping, mixing, kneading, cooking, steaming, weighing), speeds (Spoon, 1-10, Turbo), temperature settings, and special modes (e.g., Kneading, Varoma). Your output must be a valid JSON object following the provided schema. For each step, provide clear, concise instructions specific to the Thermomix TM6. Only include duration, speed, or temperature if they are applicable to the step.`;
+  const systemInstruction = `You are an expert chef specializing in creating and adapting recipes for the Thermomix TM6. You understand all its functions (e.g., chopping, mixing, kneading, cooking, steaming, weighing), speeds (Spoon, 1-10, Turbo), temperature settings, and special modes (e.g., Kneading, Varoma). Your output must be a valid JSON object with exactly these fields: title (string), description (string), servings (string), totalTime (string), ingredients (array of objects with amount and name), and steps (array of objects with instruction, and optional duration, speed, temperature).
+
+IMPORTANT: Return ONLY the JSON object, without any markdown formatting, code blocks, or additional text. The JSON must include all required fields: title and steps array.`;
 
   // Create the appropriate user prompt based on the mode
   const userPrompt =
@@ -145,7 +147,7 @@ const callGeminiAPI = async (
 };
 
 /**
- * Call Grok API (xAI)
+ * Call Grok API
  */
 const callGrokAPI = async (
   apiKey: string,
@@ -156,23 +158,134 @@ const callGrokAPI = async (
     apiKey: apiKey,
   });
 
-  // Add JSON instruction to the system prompt for Grok
-  const jsonSystemInstruction = `${systemInstruction}\n\nYou must respond with valid JSON only, following the exact schema provided. Do not include any other text or explanations.`;
-
   const response = await generateText({
     model: grok(AI_PROVIDERS.grok.model),
-    system: jsonSystemInstruction,
+    system: systemInstruction,
     prompt: userPrompt,
-    temperature: 0.7,
   });
 
-  const jsonText = response.text.trim();
+  let jsonText = response.text.trim();
+
+  // Extract JSON from markdown code blocks if present
+  const jsonMatch = jsonText.match(/```(?:json)?\s*(\{[\s\S]*?\})\s*```/);
+  if (jsonMatch) {
+    jsonText = jsonMatch[1];
+  }
+
+  // Also handle cases where JSON might be preceded by explanatory text
+  const jsonStartIndex = jsonText.indexOf('{');
+  const jsonEndIndex = jsonText.lastIndexOf('}');
+  if (jsonStartIndex !== -1 && jsonEndIndex !== -1 && jsonEndIndex > jsonStartIndex) {
+    jsonText = jsonText.substring(jsonStartIndex, jsonEndIndex + 1);
+  }
+
+  console.log('Grok raw response:', response.text);
+  console.log('Extracted JSON:', jsonText);
+
   const recipeData = JSON.parse(jsonText);
 
-  // Basic validation
-  if (!recipeData.title || !Array.isArray(recipeData.steps)) {
-    throw new Error("Invalid recipe format received from Grok API.");
+  console.log('Parsed recipe data:', recipeData);
+
+  // More robust validation with better error messages
+  const validationErrors = [];
+  if (!recipeData.title || typeof recipeData.title !== 'string') {
+    validationErrors.push('Missing or invalid title field');
+  }
+  if (!recipeData.steps || !Array.isArray(recipeData.steps)) {
+    validationErrors.push('Missing or invalid steps array');
+  } else if (recipeData.steps.length === 0) {
+    validationErrors.push('Steps array is empty');
+  }
+
+  if (validationErrors.length > 0) {
+    console.error('Validation errors:', validationErrors);
+    console.error('Full recipe data:', JSON.stringify(recipeData, null, 2));
+    throw new Error(`Invalid recipe format received from Grok API: ${validationErrors.join(', ')}`);
   }
 
   return recipeData as ThermomixRecipe;
+};
+
+/**
+ * Test API key functionality for a provider.
+ * Makes a simple API call to verify the key works.
+ *
+ * @param provider - The AI provider to test
+ * @param apiKey - The API key to test
+ * @returns Promise resolving to true if the API key works
+ * @throws Error if the API key is invalid or the call fails
+ */
+export const testApiKey = async (
+  provider: AIProvider,
+  apiKey: string
+): Promise<boolean> => {
+  if (!apiKey) {
+    throw new Error('API key is required');
+  }
+
+  try {
+    if (provider === 'gemini') {
+      return await testGeminiApiKey(apiKey);
+    } else if (provider === 'grok') {
+      return await testGrokApiKey(apiKey);
+    } else {
+      throw new Error(`Unsupported AI provider: ${provider}`);
+    }
+  } catch (error) {
+    console.error(`Error testing ${provider} API key:`, error);
+    if (error instanceof Error) {
+      throw new Error(`API key test failed: ${error.message}`);
+    }
+    throw new Error('API key test failed: Unknown error');
+  }
+};
+
+/**
+ * Test Gemini API key with a simple call
+ */
+const testGeminiApiKey = async (apiKey: string): Promise<boolean> => {
+  const ai = new GoogleGenAI({ apiKey });
+
+  // Simple test prompt
+  const testPrompt = "Say 'Hello, API key is working!' in exactly those words.";
+
+  const response = await ai.models.generateContent({
+    model: AI_PROVIDERS.gemini.model,
+    contents: testPrompt,
+    config: {
+      maxOutputTokens: 50,
+    },
+  });
+
+  const responseText = response.text.trim().toLowerCase();
+  if (responseText.includes('hello') && responseText.includes('api key') && responseText.includes('working')) {
+    return true;
+  } else {
+    throw new Error('Unexpected response from Gemini API');
+  }
+};
+
+/**
+ * Test Grok API key with a simple call
+ */
+const testGrokApiKey = async (apiKey: string): Promise<boolean> => {
+  const grok = createXai({
+    apiKey: apiKey,
+  });
+
+  // Simple test prompt
+  const testPrompt = "Say 'Hello, API key is working!' in exactly those words.";
+
+  const response = await generateText({
+    model: grok(AI_PROVIDERS.grok.model),
+    system: "You are a helpful assistant. Respond exactly as requested.",
+    prompt: testPrompt,
+  });
+
+  const responseText = response.text.trim().toLowerCase();
+  if (responseText.includes('hello') && responseText.includes('api key') && responseText.includes('working')) {
+    return true;
+  } else {
+    throw new Error('Unexpected response from Grok API');
+  }
 };

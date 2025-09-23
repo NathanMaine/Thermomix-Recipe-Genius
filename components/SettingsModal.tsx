@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { updateUserApiKey, deleteUserApiKey, setUserDefaultProvider, getCurrentUser } from '../services/authService';
 import { AIProvider } from '../types';
-import { AI_PROVIDERS } from '../services/aiService';
+import { AI_PROVIDERS, testApiKey } from '../services/aiService';
 
 interface SettingsModalProps {
   username: string;
@@ -20,6 +20,8 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ username, onClose, onApiK
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [isTestingApi, setIsTestingApi] = useState(false);
+  const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
 
   const currentUser = getCurrentUser();
   const providerConfig = AI_PROVIDERS[selectedProvider];
@@ -34,10 +36,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ username, onClose, onApiK
     setError('');
 
     try {
+      console.log('Updating API key for provider:', selectedProvider, 'with key:', newApiKey.substring(0, 10) + '...');
       updateUserApiKey(username, selectedProvider, newApiKey);
+      console.log('API key updated successfully');
       onApiKeyChanged();
       setNewApiKey('');
+      console.log('UI updated, input cleared');
     } catch (err) {
+      console.error('Error updating API key:', err);
       setError(err instanceof Error ? err.message : 'Failed to update API key');
     } finally {
       setIsLoading(false);
@@ -65,6 +71,29 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ username, onClose, onApiK
       onApiKeyChanged();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to set default provider');
+    }
+  };
+
+  const handleTestApiKey = async () => {
+    const apiKey = currentUser?.apiKeys[selectedProvider];
+    if (!apiKey) {
+      setTestResult({ success: false, message: 'No API key set for this provider' });
+      return;
+    }
+
+    setIsTestingApi(true);
+    setTestResult(null);
+
+    try {
+      await testApiKey(selectedProvider, apiKey);
+      setTestResult({ success: true, message: 'API key is working correctly!' });
+    } catch (err) {
+      setTestResult({
+        success: false,
+        message: err instanceof Error ? err.message : 'API key test failed'
+      });
+    } finally {
+      setIsTestingApi(false);
     }
   };
 
@@ -117,10 +146,12 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ username, onClose, onApiK
                 <button
                   key={provider}
                   onClick={() => {
+                    console.log('Switching to provider:', provider);
                     setSelectedProvider(provider);
                     setNewApiKey('');
                     setError('');
                     setShowConfirmDelete(false);
+                    setTestResult(null);
                   }}
                   className={`p-3 border rounded-lg text-left transition-colors ${
                     selectedProvider === provider
@@ -163,6 +194,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ username, onClose, onApiK
                 {isLoading ? 'Updating...' : 'Update Key'}
               </button>
 
+              <button
+                onClick={handleTestApiKey}
+                disabled={isTestingApi || !currentUser?.apiKeys[selectedProvider]}
+                className="flex-1 bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+              >
+                {isTestingApi ? 'Testing...' : 'Test API'}
+              </button>
+
               {currentUser?.apiKeys[selectedProvider] && !showConfirmDelete && (
                 <button
                   onClick={() => setShowConfirmDelete(true)}
@@ -200,6 +239,19 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ username, onClose, onApiK
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
               {error}
+            </div>
+          )}
+
+          {testResult && (
+            <div className={`px-4 py-3 rounded border ${
+              testResult.success
+                ? 'bg-green-100 border-green-400 text-green-700'
+                : 'bg-red-100 border-red-400 text-red-700'
+            }`}>
+              <div className="font-medium">
+                {testResult.success ? '✓ Test Successful' : '✗ Test Failed'}
+              </div>
+              <div className="text-sm mt-1">{testResult.message}</div>
             </div>
           )}
         </div>
