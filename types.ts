@@ -45,3 +45,58 @@ export interface ThermomixRecipe {
   /** Step-by-step cooking instructions */
   steps: RecipeStep[];
 }
+
+/**
+ * User profile information.
+ */
+export interface User {
+  /** Unique username */
+  username: string;
+  /** Encrypted password (in a real app, this would be properly hashed) */
+  password: string;
+  /** API keys for different AI providers */
+  apiKeys: {
+    gemini?: string;
+    grok?: string;
+  };
+  /** Default AI provider to use */
+  defaultProvider: 'gemini' | 'grok';
+  /** Timestamp of when the user was created */
+  createdAt: string;
+}
+
+/**
+ * User's saved recipes and preferences.
+ */
+export interface UserProfile {
+  /** Username */
+  username: string;
+  /** List of saved recipes */
+  savedRecipes: ThermomixRecipe[];
+  /** User preferences */
+  preferences: {
+    /** Default number of servings */
+    defaultServings?: number;
+    /** Favorite cuisines */
+    favoriteCuisines?: string[];
+  };
+}
+
+/**
+ * Supported AI providers for recipe generation.
+ */
+export type AIProvider = 'gemini' | 'grok';
+
+/**
+ * Configuration for AI providers.
+ */
+export interface AIProviderConfig {
+  /** Display name for the provider */
+  name: string;
+  /** Description of the provider */
+  description: string;
+  /** URL to get API key */
+  apiKeyUrl: string;
+  /** Model name to use */
+  model: string;
+}

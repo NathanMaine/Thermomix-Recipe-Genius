@@ -17,7 +17,7 @@ An intelligent web application that leverages Google's Gemini AI to generate bra
 - **Recipe Conversion**: Transform any web recipe or pasted text into Thermomix instructions
 - **Thermomix TM6 Optimized**: All recipes include specific speed settings, temperatures, and durations
 - **Modern UI**: Clean, responsive interface built with React and Tailwind CSS
-- **Real-time AI**: Powered by Google's Gemini 2.5 Flash model for accurate, contextual recipes
+- **Real-time AI**: Powered by Google's Gemini 1.5 Pro model for accurate, contextual recipes
 - **Type-Safe**: Fully typed with TypeScript for reliability
 
 ## 🚀 Quick Start

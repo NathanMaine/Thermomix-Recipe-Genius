@@ -22,3 +22,18 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment files and API keys
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.key
+*.pem
+api-keys.json
+secrets.json
+
+# API Keys and sensitive data
+# Note: This app stores API keys in localStorage, so they won't be committed
+# But these patterns prevent accidental commits of API keys in files
