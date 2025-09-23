@@ -8,16 +8,31 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Google Gemini](https://img.shields.io/badge/Google%20Gemini-4285F4?logo=google&logoColor=white)](https://ai.google.dev/)
+[![xAI Grok](https://img.shields.io/badge/xAI%20Grok-000000?logo=x&logoColor=white)](https://x.ai/)
 
-An intelligent web application that leverages AI to generate and convert recipes optimized for the Thermomix TM6 with **precision weight-based measurements**. All recipes emphasize the Thermomix's built-in digital scale for accurate, professional-grade cooking.
+An intelligent web application that leverages **multiple AI providers** (Google Gemini & xAI Grok) to generate and convert recipes optimized for the Thermomix TM6 with **precision weight-based measurements**. All recipes emphasize the Thermomix's built-in digital scale for accurate, professional-grade cooking.
 
 ## 🤖 How the App Works
 
 ### Recipe Generation
-The app uses AI (Gemini or Grok) to generate recipes with a strong emphasis on **weight-based measurements** (grams/ounces) rather than volume.
+The app uses **multiple AI providers** (Google Gemini or xAI Grok) to generate recipes with a strong emphasis on **weight-based measurements** (grams/ounces) rather than volume.
+
+### Supported AI Providers
+
+#### 🤖 Google Gemini
+- **Provider**: Google Gemini 1.5 Pro
+- **Strengths**: Excellent structured output, reliable JSON formatting
+- **Best for**: Consistent, well-formatted recipes
+
+#### 🧠 xAI Grok
+- **Provider**: Grok-2-1212 by xAI
+- **Strengths**: Creative responses, helpful explanations
+- **Best for**: Innovative recipe ideas and variations
+- **Note**: Includes special JSON extraction for markdown-formatted responses
 
 ### System Instructions
-The AI is specifically instructed to:
+Both AI providers receive identical instructions to:
 - Use grams as the primary unit for ALL ingredients (e.g., "200 g flour", "50 g butter")
 - Emphasize the Thermomix's built-in digital scale
 - Avoid volume measurements when possible
@@ -43,8 +58,8 @@ The app successfully creates **weight-focused recipes** that are optimized for t
 
 ## ✨ Features
 
+- **🤖 Multi-Provider AI Support**: Choose between Google Gemini and xAI Grok for recipe generation
 - **🎯 Weight-Based Precision**: All recipes use grams/ounces as primary measurements
-- **🤖 Multi-Provider AI**: Choose between Google Gemini and xAI Grok
 - **⚖️ Scale-Optimized**: Instructions designed for Thermomix's built-in weighing system
 - **🔄 Recipe Generation**: Create original recipes from simple descriptions
 - **📋 Recipe Conversion**: Transform any recipe into weight-based Thermomix format
@@ -131,6 +146,19 @@ This fork specializes in **precision weight measurements** using the Thermomix's
 - Use "Test API" to verify functionality
 - Switch providers anytime for comparison
 
+### AI Provider Comparison
+
+| Feature | Google Gemini | xAI Grok |
+|---------|---------------|----------|
+| **Model** | Gemini 1.5 Pro | Grok-2-1212 |
+| **Response Format** | Native JSON | Markdown-wrapped JSON* |
+| **Creativity** | Structured, consistent | More creative variations |
+| **Setup** | [Google AI Studio](https://ai.studio.google.com/) | [xAI Console](https://console.x.ai/) |
+| **Cost** | Pay-per-use | Pay-per-use |
+| **Best For** | Reliable, structured recipes | Innovative recipe ideas |
+
+*Grok responses are automatically parsed to extract JSON from markdown formatting.
+
 ## 🛠️ Development
 
 ### Available Scripts
@@ -164,15 +192,24 @@ thermomix-recipe-genius/
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `GEMINI_API_KEY` | Your Google Gemini API key | Yes |
+| `GEMINI_API_KEY` | Your Google Gemini API key | Optional* |
+| `GROK_API_KEY` | Your xAI Grok API key | Optional* |
+
+*At least one API key is required. You can set up both providers and switch between them in the app.
 
 ## 🔧 Configuration
 
-The app uses structured output from Gemini AI to ensure consistent recipe formatting. The schema includes:
+The app uses structured output from both AI providers to ensure consistent recipe formatting. The schema includes:
 - Recipe title and description
 - Servings and total time
 - Ingredient list with amounts
 - Step-by-step instructions with Thermomix settings
+
+### AI Provider Selection
+- **Default Provider**: Gemini (can be changed in Profile → Settings)
+- **Provider Switching**: Change providers anytime without restarting the app
+- **API Key Management**: Store separate keys for each provider securely in your profile
+- **Fallback Support**: If one provider fails, you can switch to the other
 
 ## 🚀 Deployment
 
