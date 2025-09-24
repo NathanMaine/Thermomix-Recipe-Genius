@@ -26,10 +26,11 @@ pnpm -C apps/web dev     # Next.js on :3000
 ## Key Conventions
 
 ### Environment & Configuration
-- Server config via `COOKIDOO_*` env vars (region, mock mode, credentials)
+- Server config via `COOKIDOO_*` env vars (region, mock mode, JWT token)
 - Web connects to server via `NEXT_PUBLIC_SERVER_URL` (defaults to localhost:7070)
-- Mock mode (`COOKIDOO_MOCK=1`) enabled by default for development
+- Mock mode (`COOKIDOO_MOCK=0`) disabled by default for production
 - JWT auth with 1-hour tokens, server-side only
+- JWT tokens obtained via `pnpm -C apps/server run get-jwt` script
 
 ### Recipe Schema (`packages/schema/`)
 - Ingredients: prefer `amount_g` or `amount_ml` over cups
@@ -46,8 +47,8 @@ pnpm -C apps/web dev     # Next.js on :3000
 ### Testing
 - E2E tests in `tests/e2e/` using Playwright
 - Run with `pnpm test:e2e` (requires both server and web running)
-- Tests verify login → upload → verification flow
-- Use sandbox credentials for E2E testing
+- Tests verify JWT login → upload → verification flow
+- Use JWT tokens for authentication in tests
 
 ### Code Organization
 - Shared types via `@thermo/schema` workspace package

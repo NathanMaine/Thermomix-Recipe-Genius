@@ -2,17 +2,14 @@ import { test, expect, request } from "@playwright/test";
 
 const WEB = process.env.E2E_WEB_URL || "http://localhost:3000";
 const SERVER = process.env.E2E_SERVER_URL || "http://localhost:7070";
-const EMAIL = process.env.E2E_COOKIDOO_EMAIL || "sandbox@example.com";
-const PASSWORD = process.env.E2E_COOKIDOO_PASSWORD || "sandbox-password";
+const JWT_TOKEN = process.env.E2E_COOKIDOO_JWT || "test-jwt-token";
 
 test.describe("Created Recipe upload flow", () => {
   test("login → Save to Cookidoo → server receives payload", async ({ page }) => {
     await page.goto(WEB);
 
-    const email = page.getByPlaceholder("email");
-    const password = page.getByPlaceholder("password");
-    await email.fill(EMAIL);
-    await password.fill(PASSWORD);
+    const jwtTextarea = page.getByPlaceholder("Paste your Cookidoo JWT token here...");
+    await jwtTextarea.fill(JWT_TOKEN);
 
     const postPromise = page.waitForResponse(resp =>
       resp.url().includes("/cookidoo/created-recipes") && resp.request().method() === "POST"
@@ -31,7 +28,7 @@ test.describe("Created Recipe upload flow", () => {
 
     const reqCtx = await request.newContext();
     const loginRes = await reqCtx.post(`${SERVER}/login`, {
-      data: { email: EMAIL, password: PASSWORD }
+      data: { token: JWT_TOKEN }
     });
     expect(loginRes.ok()).toBeTruthy();
     const { token } = await loginRes.json();

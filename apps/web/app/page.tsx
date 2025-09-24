@@ -6,7 +6,7 @@ const SERVER = process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:7070";
 
 export default function Home() {
   const [token, setToken] = useState<string>("");
-  const [email, setEmail] = useState(""); const [password, setPassword] = useState("");
+  const [jwtToken, setJwtToken] = useState("");
   const [recipe, setRecipe] = useState<Recipe>({
     title: "Garlic Butter Broccoli",
     description: "Simple side in TM6",
@@ -26,9 +26,15 @@ export default function Home() {
   });
 
   async function doLogin() {
-    const r = await fetch(`${SERVER}/login`, { method: "POST", headers: { "Content-Type":"application/json" }, body: JSON.stringify({ email, password }) });
-    const json = await r.json();
-    if (json?.token) setToken(json.token);
+    const doLogin = async () => {
+    const r = await fetch(`${SERVER}/login`, { method: "POST", headers: { "Content-Type":"application/json" }, body: JSON.stringify({ token: jwtToken }) });
+    const data = await r.json();
+    if (data.token) {
+      setToken(data.token);
+    } else {
+      alert("Login failed: " + JSON.stringify(data));
+    }
+  };
   }
 
   async function saveToCookidoo() {
@@ -49,20 +55,16 @@ export default function Home() {
       <section className="border p-4 rounded-xl">
         <h2 className="font-semibold mb-2">Cookidoo Login (server-side)</h2>
         <div className="space-y-2">
-          <input
-            type="email"
-            placeholder="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="border p-2 w-full"
+          <textarea
+            placeholder="Paste your Cookidoo JWT token here..."
+            value={jwtToken}
+            onChange={(e) => setJwtToken(e.target.value)}
+            className="border p-2 w-full h-24"
+            rows={4}
           />
-          <input
-            type="password"
-            placeholder="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="border p-2 w-full"
-          />
+          <p className="text-xs text-gray-500">
+            Get this token by running: <code>pnpm -C apps/server run get-jwt</code>
+          </p>
           <button
             onClick={doLogin}
             className="bg-blue-500 text-white px-4 py-2 rounded"

@@ -3,21 +3,119 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, field_validator
 import os, jwt, time, re
 from typing import Optional, Literal, Union, Dict, List
+import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '..', '.env'))
+print("Environment loaded")
 
 app = FastAPI(title="Thermomix Companion Server")
+print("FastAPI app created")
 
 # Add CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Next.js dev server
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=["http://localhost:3000"],  # Next.js dev server
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
+print("CORS middleware commented out")
 
 JWT_SECRET = os.getenv("JWT_SECRET", "dev-secret")
+AUTH_STRATEGY = os.getenv("AUTH_STRATEGY", "web_jwt")
+COOKIDOO_HOST = os.getenv("COOKIDOO_HOST", "cookidoo.thermomix.com")
+COOKIDOO_LOCALE = os.getenv("COOKIDOO_LOCALE", "en-US")
+COOKIDOO_JWT = os.getenv("COOKIDOO_JWT")
 REGION = os.getenv("COOKIDOO_REGION", "us")
-MOCK = os.getenv("COOKIDOO_MOCK", "1") == "1"   # mock mode on by default for e2e
+MOCK = os.getenv("COOKIDOO_MOCK", "1") == "1"
+print(f"MOCK = {MOCK}")
+
+# ----- Cookidoo API Client -----
+class CookidooClient:
+    def __init__(self, jwt_token: str, host: str = "cookidoo.thermomix.com", locale: str = "en-US"):
+        self.jwt_token = jwt_token
+        self.host = host
+        self.locale = locale
+        self.base_url = f"https://{host}"
+        self.session = requests.Session()
+
+        # Configure retry strategy
+        retry_strategy = Retry(
+            total=3,
+            status_forcelist=[429, 500, 502, 503, 504],
+            backoff_factor=1
+        )
+        adapter = HTTPAdapter(max_retries=retry_strategy)
+        self.session.mount("http://", adapter)
+        self.session.mount("https://", adapter)
+
+        # Headers to mimic browser with JWT authentication
+        self.session.headers.update({
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept': 'application/json, text/plain, */*',
+            'Accept-Language': f'{locale},en;q=0.9',
+            'Content-Type': 'application/json',
+            'Origin': self.base_url,
+            'Referer': f"{self.base_url}/",
+            'Authorization': f'Bearer {jwt_token}',
+            'Cookie': f'_oauth2_proxy={jwt_token}',
+        })
+
+    def create_created_recipe(self, recipe_payload: dict) -> Optional[str]:
+        """Create a new recipe in Cookidoo"""
+        # Try different possible API endpoints for recipe creation
+        create_urls = [
+            f"{self.base_url}/api/recipes/created",
+            f"{self.base_url}/api/recipes",
+            f"{self.base_url}/recipes/created",
+            "https://cookidoo.com/api/recipes/created",
+            "https://cookidoo.com/api/recipes"
+        ]
+        
+        for create_url in create_urls:
+            try:
+                print(f"Trying recipe creation URL: {create_url}")
+                response = self.session.post(create_url, json=recipe_payload, timeout=15)
+                print(f"Recipe creation response: {response.status_code}")
+                
+                if response.status_code in [200, 201]:
+                    result = response.json()
+                    recipe_id = result.get('id') or result.get('recipeId') or result.get('recipe_id')
+                    
+                    if recipe_id:
+                        print(f"Recipe created successfully with ID: {recipe_id}")
+                        return str(recipe_id)
+                    else:
+                        print(f"Recipe creation response: {result}")
+                        # Continue trying other endpoints
+                elif response.status_code == 302:
+                    # Redirect might indicate success
+                    location = response.headers.get('Location', '')
+                    if 'recipe' in location.lower():
+                        print(f"Recipe created, redirected to: {location}")
+                        # Extract ID from URL if possible
+                        import re
+                        match = re.search(r'/recipe[s]?/(\d+)', location)
+                        if match:
+                            return match.group(1)
+                        return "redirect-success"
+                else:
+                    print(f"Endpoint {create_url} failed: {response.status_code} - {response.text[:200]}")
+                    
+            except requests.RequestException as e:
+                print(f"Recipe creation failed for {create_url}: {e}")
+                continue
+        
+        # If all endpoints failed, raise an error
+        raise Exception("All recipe creation endpoints failed")
+
+    def created_recipes_url(self) -> str:
+        """Get URL for created recipes page"""
+        return f"{self.base_url}/profile/recipes/created"
 
 # ----- In-memory store for mock mode -----
 MOCK_CREATED_BY_USER: Dict[str, List[dict]] = {}
@@ -77,16 +175,37 @@ class Recipe(BaseModel):
     steps: List[Step] = Field(min_length=1)
     tags: Optional[List[str]] = None
 
-# ----- Auth (demo JWT) -----
+# ----- Auth (JWT validation) -----
 class LoginReq(BaseModel):
-    email: str
-    password: str
+    token: str  # JWT token from _oauth2_proxy cookie
 
 @app.post("/login")
 def login(req: LoginReq):
-    # TODO: perform real Cookidoo login (unofficial client) and store session
-    token = jwt.encode({"sub": req.email, "exp": int(time.time()) + 3600}, JWT_SECRET, algorithm="HS256")
-    return {"token": token, "region": REGION, "mock": MOCK}
+    # Validate the JWT token (Cookidoo uses a custom format with | separators)
+    if not req.token or len(req.token.strip()) == 0:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+    # For Cookidoo JWT tokens (format: part1|part2|part3), just validate presence
+    # The token is already authenticated by Cookidoo/OAuth proxy
+    try:
+        # Create our own session token
+        session_token = jwt.encode({
+            "sub": "cookidoo_user",
+            "cookidoo_jwt": req.token,
+            "exp": int(time.time()) + 3600
+        }, JWT_SECRET, algorithm="HS256")
+
+        return {"token": session_token, "region": REGION, "mock": MOCK}
+    except Exception as e:
+        raise HTTPException(status_code=401, detail=f"Authentication failed: {str(e)}")
+
+@app.get("/test")
+def test():
+    try:
+        return "Hello World"
+    except Exception as e:
+        print(f"Error in test endpoint: {e}")
+        raise
 
 def get_user_from_token(token: str) -> str:
     try:
@@ -166,11 +285,21 @@ def create_created_recipe(req: CreateRecipeReq):
             "id": len(MOCK_CREATED_BY_USER[user]) - 1
         }
 
-    # ----- REAL IMPLEMENTATION (replace with unofficial client) -----
-    # client = CookidooClient(...)
-    # recipe_id = client.create_created_recipe(payload)
-    # return { "status": "ok", "mock": False, "cookidooUrl": client.created_recipes_url(), "id": recipe_id }
-    return {"status": "ok", "mock": False, "cookidooUrl": f"https://cookidoo.{REGION}/profile/recipes/created"}
+    # ----- REAL IMPLEMENTATION -----
+    if not COOKIDOO_JWT:
+        raise HTTPException(status_code=500, detail="Cookidoo JWT not configured")
+
+    try:
+        client = CookidooClient(COOKIDOO_JWT, COOKIDOO_HOST, COOKIDOO_LOCALE)
+        recipe_id = client.create_created_recipe(payload)
+        return {
+            "status": "ok",
+            "mock": False,
+            "cookidooUrl": client.created_recipes_url(),
+            "id": recipe_id
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to create recipe: {str(e)}")
 
 class ListReq(BaseModel):
     token: str

@@ -1,9 +1,6 @@
 # Node
 node_modules/
 .pnp.*
-pnpm-lock.yaml
-
-# Next
 .next/
 out/
 
@@ -13,6 +10,24 @@ __pycache__/
 .venv/
 .env
 
+# Testing
+test-results/
+playwright-report/
+
+# Logs
+*.log
+logs/
+
 # OS
 .DS_Store
 Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build artifacts
+dist/
+build/

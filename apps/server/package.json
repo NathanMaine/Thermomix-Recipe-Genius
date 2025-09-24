@@ -2,6 +2,6 @@
   "name": "thermo-server-scripts",
   "private": true,
   "scripts": {
-    "dev": "uvicorn main:app --reload --port 7070"
+    "dev": "hypercorn main:app --bind 127.0.0.1:7070 --reload"
   }
 }

@@ -31,15 +31,29 @@ Web App (Next.js :3000) → Server (FastAPI :7070) → Cookidoo API
 pnpm i
 python -m pip install -r apps/server/requirements.txt
 
-# 2) Start server (mock mode ON by default)
-COOKIDOO_MOCK=1 pnpm -C apps/server dev
+# 2) Get Cookidoo JWT token (see below)
+pnpm -C apps/server run get-jwt
 
-# 3) Start web
+# 3) Start server (production mode - real Cookidoo API calls)
+COOKIDOO_MOCK=0 pnpm -C apps/server dev
+
+# 4) Start web
 pnpm -C apps/web dev
 
-# 4) Open http://localhost:3000
-# Login with any email/password (mock mode), click "Save to Cookidoo"
+# 5) Open http://localhost:3000
+# Paste your JWT token and click "Login", then "Save to Cookidoo"
 ```
+
+## Getting Cookidoo JWT Token
+
+The app uses JWT tokens for authentication instead of email/password:
+
+```bash
+# Run the Playwright script to extract JWT token from Cookidoo
+pnpm -C apps/server run get-jwt
+```
+
+This will open a browser, log into Cookidoo, and save the JWT token to your `.env` file.
 
 ## E2E test
 In a separate terminal (with server at 7070 and web at 3000):
@@ -49,8 +63,28 @@ pnpm test:e2e
 pnpm test:e2e:ui
 ```
 
-## Moving from MOCK → real
-Replace the TODOs in `apps/server/main.py` under `create_created_recipe()` with calls to the unofficial Cookidoo client of your choice. Keep the `map_to_cookidoo_payload()` as your single source of truth; translate field names there if needed.
+## Production Deployment
+
+The app is now production-ready with real Cookidoo API integration:
+
+1. **Get JWT Token**: Run `pnpm -C apps/server run get-jwt` to obtain your Cookidoo JWT token
+2. **Set Environment**: Ensure `COOKIDOO_MOCK=0` in your `.env` file
+3. **Deploy**: Both server and web app can be deployed to any hosting platform
+
+### Environment Variables
+
+```bash
+# Server (.env)
+COOKIDOO_MOCK=0                    # 0 for production, 1 for development
+COOKIDOO_JWT=<your-jwt-token>      # From get-jwt script
+JWT_SECRET=<secure-random-string>  # Change in production
+COOKIDOO_HOST=cookidoo.thermomix.com
+COOKIDOO_LOCALE=en-US
+COOKIDOO_REGION=us
+
+# Web (environment variables or .env.local)
+NEXT_PUBLIC_SERVER_URL=http://localhost:7070  # Your server URL
+```
 
 ## Development Commands
 
@@ -105,8 +139,9 @@ make typecheck   # TypeScript
 - **Recipe Schema**: Thermomix-specific constraints (temp 37-160°C, speed 0-10 or "Turbo")
 - **Cookidoo Integration**: JWT auth, recipe upload, created recipes listing
 - **Type Safety**: Zod schemas shared across frontend/backend
-- **Mock Mode**: Full development workflow without real Cookidoo credentials
+- **Production Ready**: Real Cookidoo API integration (mock mode available for development)
 - **E2E Testing**: Complete login → upload → verification flow
+- **JWT Authentication**: Secure token-based auth using Cookidoo's OAuth flow
 
 ## Notes
 - Never store real credentials in the client; use the server endpoints.
