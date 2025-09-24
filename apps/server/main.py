@@ -1,23 +1,33 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, field_validator
 import os, jwt, time, re
-from typing import Optional, Literal
+from typing import Optional, Literal, Union, Dict, List
 
 app = FastAPI(title="Thermomix Companion Server")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # Next.js dev server
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 JWT_SECRET = os.getenv("JWT_SECRET", "dev-secret")
 REGION = os.getenv("COOKIDOO_REGION", "us")
 MOCK = os.getenv("COOKIDOO_MOCK", "1") == "1"   # mock mode on by default for e2e
 
 # ----- In-memory store for mock mode -----
-MOCK_CREATED_BY_USER: dict[str, list[dict]] = {}
+MOCK_CREATED_BY_USER: Dict[str, List[dict]] = {}
 
 # ----- Models (schema-aligned) -----
 class Ingredient(BaseModel):
     name: str
-    amount_g: float | None = None
-    amount_ml: float | None = None
-    note: str | None = None
+    amount_g: Optional[float] = None
+    amount_ml: Optional[float] = None
+    note: Optional[str] = None
 
     @field_validator("amount_g", "amount_ml")
     @classmethod
@@ -29,7 +39,7 @@ class Ingredient(BaseModel):
 class Step(BaseModel):
     text: str
     temperature_c: Optional[int] = Field(default=None)
-    speed: Optional[float | Literal["Turbo"]] = Field(default=None)
+    speed: Optional[Union[float, Literal["Turbo"]]] = Field(default=None)
     time_s: Optional[int] = Field(default=None)
     mode: Optional[Literal["Stir","Knead","Whisk","Blend","Heat","Weigh"]] = Field(default=None)
     safety: bool = False
@@ -60,12 +70,12 @@ class Step(BaseModel):
 
 class Recipe(BaseModel):
     title: str = Field(min_length=2)
-    description: str | None = None
+    description: Optional[str] = None
     servings: int = Field(default=2, ge=1, le=12)
     total_time_min: int = Field(default=0, ge=0)
-    ingredients: list[Ingredient]
-    steps: list[Step] = Field(min_length=1)
-    tags: list[str] | None = None
+    ingredients: List[Ingredient]
+    steps: List[Step] = Field(min_length=1)
+    tags: Optional[List[str]] = None
 
 # ----- Auth (demo JWT) -----
 class LoginReq(BaseModel):
@@ -174,7 +184,7 @@ def list_created(req: ListReq):
 
 class ShoppingReq(BaseModel):
     token: str
-    items: list[str]
+    items: List[str]
 
 @app.post("/cookidoo/shopping-list")
 def shopping(req: ShoppingReq):
