@@ -1,44 +1,18 @@
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+# Node
+node_modules/
+.pnp.*
+pnpm-lock.yaml
 
-node_modules
-dist
-dist-ssr
-*.local
+# Next
+.next/
+out/
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
-
-# Environment files and API keys
+# Python
+__pycache__/
+*.pyc
+.venv/
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-*.key
-*.pem
-api-keys.json
-secrets.json
 
-# API Keys and sensitive data
-# Note: This app stores API keys in localStorage, so they won't be committed
-# But these patterns prevent accidental commits of API keys in files
-
-# Test files
-test-api-key.js
-*-test.js
-test-*.js
+# OS
+.DS_Store
+Thumbs.db

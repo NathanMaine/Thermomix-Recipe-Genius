@@ -1,291 +1,114 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Thermomix Recipe Genius — Full-Stack Implementation
 
-# Thermomix Recipe Genius
+This is a complete full-stack implementation that pairs with your existing Cookidoo workflow:
+- **Web app** (Next.js) to build/preview recipes and **Save to Cookidoo**
+- **Server** (FastAPI) that handles login and **Created Recipes** upload (mock mode by default)
+- **Shared schema** (Zod) for type-safe recipe data across components
+- **E2E tests** (Playwright) for login → upload → verify flow
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://reactjs.org/)
-[![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Google Gemini](https://img.shields.io/badge/Google%20Gemini-4285F4?logo=google&logoColor=white)](https://ai.google.dev/)
-[![xAI Grok](https://img.shields.io/badge/xAI%20Grok-000000?logo=x&logoColor=white)](https://x.ai/)
+> ⚠️ **Unofficial**: There is no public Thermomix hardware API. This companion integrates with **Cookidoo Created Recipes** and shopping list flows; once a recipe is in Cookidoo, **TM6 Guided Cooking** handles the device functions on-device.
 
-An intelligent web application that leverages **multiple AI providers** (Google Gemini & xAI Grok) to generate and convert recipes optimized for the Thermomix TM6 with **precision weight-based measurements**. All recipes emphasize the Thermomix's built-in digital scale for accurate, professional-grade cooking.
-
-## 🤖 How the App Works
-
-### Recipe Generation
-The app uses **multiple AI providers** (Google Gemini or xAI Grok) to generate recipes with a strong emphasis on **weight-based measurements** (grams/ounces) rather than volume.
-
-### Supported AI Providers
-
-#### 🤖 Google Gemini
-- **Provider**: Google Gemini 1.5 Pro
-- **Strengths**: Excellent structured output, reliable JSON formatting
-- **Best for**: Consistent, well-formatted recipes
-
-#### 🧠 xAI Grok
-- **Provider**: Grok-2-1212 by xAI
-- **Strengths**: Creative responses, helpful explanations
-- **Best for**: Innovative recipe ideas and variations
-- **Note**: Includes special JSON extraction for markdown-formatted responses
-
-### System Instructions
-Both AI providers receive identical instructions to:
-- Use grams as the primary unit for ALL ingredients (e.g., "200 g flour", "50 g butter")
-- Emphasize the Thermomix's built-in digital scale
-- Avoid volume measurements when possible
-- Place ingredients directly on the scale in the mixing bowl
-
-### Recipe Structure
-- **Ingredients**: Listed with precise weight amounts (e.g., "200 g all-purpose flour")
-- **Steps**: Include instructions that reference weighing, but these are text-based only
-
-### The Thermomix TM6 Reality
-- **Built-in Scale**: The TM6 does have an integrated digital scale in the mixing bowl
-- **Manual Process**: Users must physically place ingredients on the scale and add them until the target weight is reached
-- **No App Integration**: The web app has **no direct connection** to the physical Thermomix device
-
-### What Actually Happens
-1. The app generates recipes like: "Add 200 g flour to the mixing bowl"
-2. The user reads this on their screen
-3. The user manually places the mixing bowl on the scale and adds flour until it shows 200g
-4. The Thermomix then uses its other functions (mixing, cooking, etc.) based on the recipe steps
-
-### Conclusion
-The app successfully creates **weight-focused recipes** that are optimized for the Thermomix's scale capabilities. However, the actual weighing process requires **manual user interaction** with the physical device - the app provides the instructions, but doesn't automate the weighing itself.
-
-## ✨ Features
-
-- **🤖 Multi-Provider AI Support**: Choose between Google Gemini and xAI Grok for recipe generation
-- **🎯 Weight-Based Precision**: All recipes use grams/ounces as primary measurements
-- **⚖️ Scale-Optimized**: Instructions designed for Thermomix's built-in weighing system
-- **🔄 Recipe Generation**: Create original recipes from simple descriptions
-- **📋 Recipe Conversion**: Transform any recipe into weight-based Thermomix format
-- **🎛️ TM6 Optimized**: Specific speed settings, temperatures, and durations
-- **🧪 API Testing**: Built-in functionality to test your API keys
-- **💾 Recipe Storage**: Save and manage your favorite recipes
-- **📱 Modern UI**: Clean, responsive interface built with React and Tailwind CSS
-
-## 🚀 Future Versions
-
-We're planning exciting enhancements to bring Thermomix Recipe Genius even closer to seamless integration:
-
-- **🖥️ Official Software Integration**: Direct connection with Thermomix's official Cookidoo platform
-- **📤 Recipe Upload**: Automatically add generated recipes to your Thermomix online account
-- **🔌 Hardware API**: Real-time weighing data and automated recipe execution
-- **📱 Mobile App**: Native iOS/Android apps with enhanced Thermomix connectivity
-- **🤖 Smart Scaling**: AI-powered recipe scaling based on available ingredients
-- **📊 Nutrition Tracking**: Integration with nutrition databases for complete meal analysis
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- **Node.js** (version 18 or higher)
-- **AI API Key** - Choose one:
-  - **Google Gemini API Key** - Get one from [Google AI Studio](https://ai.studio.google.com/)
-  - **xAI Grok API Key** - Get one from [xAI Console](https://console.x.ai/)
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/thermomix-recipe-genius.git
-   cd thermomix-recipe-genius
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server**
-   ```bash
-   npm run dev
-   ```
-
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
-
-5. **Set up your API key**
-   - Go to Profile → Settings
-   - Choose your preferred AI provider (Gemini or Grok)
-   - Enter your API key
-   - Click "Test API" to verify it works
-
-## 📖 Usage
-
-### 🎯 Weight-Based Recipe Generation
-This fork specializes in **precision weight measurements** using the Thermomix's built-in digital scale:
-
-- **All solid ingredients** measured in **grams** (e.g., "200g flour", "150g butter")
-- **Liquids** measured in **milliliters** when weight isn't practical
-- **Scale utilization** emphasized in cooking instructions
-- **Professional precision** for consistent results
-
-### Generating a New Recipe
-1. Click on the "Generate Recipe" tab
-2. Enter a description with weight expectations (e.g., "Chocolate cake with 200g flour and 150g sugar")
-3. Select your AI provider (Gemini or Grok)
-4. Click "Create Recipe"
-5. Get a weight-optimized Thermomix recipe with precise measurements
-
-### Converting an Existing Recipe
-1. Click on the "Convert Recipe" tab
-2. Paste either:
-   - The full text of a recipe (with cups/tablespoons)
-   - A URL to a recipe webpage
-3. Click "Create Recipe"
-4. Receive a weight-based Thermomix adaptation with gram measurements
-
-### Managing API Keys
-- Go to Profile → Settings
-- Choose between Gemini and Grok providers
-- Enter your API key for the selected provider
-- Use "Test API" to verify functionality
-- Switch providers anytime for comparison
-
-### AI Provider Comparison
-
-| Feature | Google Gemini | xAI Grok |
-|---------|---------------|----------|
-| **Model** | Gemini 1.5 Pro | Grok-2-1212 |
-| **Response Format** | Native JSON | Markdown-wrapped JSON* |
-| **Creativity** | Structured, consistent | More creative variations |
-| **Setup** | [Google AI Studio](https://ai.studio.google.com/) | [xAI Console](https://console.x.ai/) |
-| **Cost** | Pay-per-use | Pay-per-use |
-| **Best For** | Reliable, structured recipes | Innovative recipe ideas |
-
-*Grok responses are automatically parsed to extract JSON from markdown formatting.
-
-## 🛠️ Development
-
-### Available Scripts
-
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build locally
-
-### Project Structure
+## Architecture
 
 ```
-thermomix-recipe-genius/
-├── components/           # React components
-│   ├── Icons.tsx        # SVG icon components
-│   ├── LoadingSpinner.tsx # Loading animation
-│   ├── RecipeDisplay.tsx # Recipe display component
-│   ├── LoginForm.tsx    # User authentication
-│   ├── Profile.tsx      # User profile management
-│   └── SettingsModal.tsx # API key settings
-├── services/            # API services
-│   ├── aiService.ts     # Multi-provider AI integration (Gemini & Grok)
-│   ├── authService.ts   # User authentication & storage
-│   └── geminiService.ts # Legacy Gemini service
-├── types.ts            # TypeScript type definitions
-├── App.tsx             # Main application component
-├── index.tsx           # Application entry point
-└── index.html          # HTML template
+Web App (Next.js :3000) → Server (FastAPI :7070) → Cookidoo API
+       ↑                           ↑
+   @thermo/schema              @thermo/schema
 ```
 
-### Environment Variables
+- **Monorepo** with pnpm workspaces
+- **Type-safe** recipe schemas shared between frontend and backend
+- **JWT authentication** with server-side Cookidoo integration
+- **Mock mode** enabled by default for development
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `GEMINI_API_KEY` | Your Google Gemini API key | Optional* |
-| `GROK_API_KEY` | Your xAI Grok API key | Optional* |
+## Prereqs
+- Node 20+, pnpm (`corepack enable`), Python 3.11+
+- (Optional) VS Code + recommended extensions
 
-*At least one API key is required. You can set up both providers and switch between them in the app.
+## Quick start
+```bash
+# 1) Install deps (Node + Python)
+pnpm i
+python -m pip install -r apps/server/requirements.txt
 
-## 🔧 Configuration
+# 2) Start server (mock mode ON by default)
+COOKIDOO_MOCK=1 pnpm -C apps/server dev
 
-The app uses structured output from both AI providers to ensure consistent recipe formatting. The schema includes:
-- Recipe title and description
-- Servings and total time
-- Ingredient list with amounts
-- Step-by-step instructions with Thermomix settings
+# 3) Start web
+pnpm -C apps/web dev
 
-### AI Provider Selection
-- **Default Provider**: Gemini (can be changed in Profile → Settings)
-- **Provider Switching**: Change providers anytime without restarting the app
-- **API Key Management**: Store separate keys for each provider securely in your profile
-- **Fallback Support**: If one provider fails, you can switch to the other
+# 4) Open http://localhost:3000
+# Login with any email/password (mock mode), click "Save to Cookidoo"
+```
 
-## 🚀 Deployment
+## E2E test
+In a separate terminal (with server at 7070 and web at 3000):
+```bash
+pnpm test:e2e
+# or the visual runner
+pnpm test:e2e:ui
+```
 
-### Build for Production
+## Moving from MOCK → real
+Replace the TODOs in `apps/server/main.py` under `create_created_recipe()` with calls to the unofficial Cookidoo client of your choice. Keep the `map_to_cookidoo_payload()` as your single source of truth; translate field names there if needed.
+
+## Development Commands
 
 ```bash
-npm run build
+# Setup everything
+make setup
+
+# Run both server and web in parallel
+make dev
+
+# Run individually
+make dev-server  # FastAPI on :7070
+make dev-web     # Next.js on :3000
+
+# Testing
+make test        # E2E tests
+pnpm test:e2e:ui # Visual test runner
+
+# Code quality
+make lint        # ESLint
+make typecheck   # TypeScript
 ```
 
-The built files will be in the `dist/` directory, ready for deployment to any static hosting service.
+## Project Structure
 
-### Environment Setup for Production
+```
+├── apps/
+│   ├── server/          # FastAPI backend
+│   │   ├── main.py      # API endpoints, auth, Cookidoo integration
+│   │   ├── requirements.txt
+│   │   └── pyproject.toml
+│   └── web/             # Next.js frontend
+│       ├── app/
+│       │   ├── layout.tsx
+│       │   └── page.tsx # Recipe builder UI
+│       ├── package.json
+│       └── next.config.mjs
+├── packages/
+│   └── schema/          # Shared Zod schemas
+│       ├── index.ts     # Recipe, Ingredient, Step types
+│       └── package.json
+├── tests/
+│   └── e2e/             # Playwright E2E tests
+│       └── upload.spec.ts
+├── package.json         # Root monorepo config
+├── pnpm-workspace.yaml  # Workspace configuration
+└── playwright.config.ts # E2E test configuration
+```
 
-Ensure your production environment has the `GEMINI_API_KEY` set. For client-side applications, consider using environment variables or a backend proxy for API keys.
+## Key Features
 
-## 🤝 Contributing
+- **Recipe Schema**: Thermomix-specific constraints (temp 37-160°C, speed 0-10 or "Turbo")
+- **Cookidoo Integration**: JWT auth, recipe upload, created recipes listing
+- **Type Safety**: Zod schemas shared across frontend/backend
+- **Mock Mode**: Full development workflow without real Cookidoo credentials
+- **E2E Testing**: Complete login → upload → verification flow
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## ⚠️ Important Notes
-
-- **API Key Security**: Never commit your actual Gemini API key to version control. Use `.env.local` and ensure it's in `.gitignore`.
-- **AI Limitations**: Recipes are generated by AI and should be reviewed for safety and accuracy before use.
-- **Thermomix Compatibility**: Recipes are optimized for TM6 but may work on other models with adjustments.
-
-## 🆘 Troubleshooting
-
-### Common Issues
-
-**"API_KEY environment variable not set"**
-- Ensure you've created `.env.local` and added your Gemini API key
-- Restart the development server after adding the key
-
-**Build fails**
-- Ensure Node.js version 18+
-- Run `npm install` to ensure all dependencies are installed
-
-**Recipes not generating**
-- Check your internet connection
-- Verify your Gemini API key is valid and has quota remaining
-
-## 🙏 Acknowledgments
-
-- Powered by [Google Gemini AI](https://ai.google.dev/)
-- Built with [React](https://reactjs.org/) and [Vite](https://vitejs.dev/)
-- Styled with [Tailwind CSS](https://tailwindcss.com/)
-
----
-
-Made with ❤️ for Thermomix enthusiasts
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
-
-# Run and deploy your AI Studio app
-
-This contains everything you need to run your app locally.
-
-View your app in AI Studio: https://ai.studio/apps/drive/1oZ529F_sBMwWKx7A1mFAtXo9eiy7qTxX
-
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Notes
+- Never store real credentials in the client; use the server endpoints.
+- Disclose clearly: this project is not affiliated with Vorwerk/Cookidoo.
+- Recipes use weight-based measurements optimized for Thermomix's built-in scale.

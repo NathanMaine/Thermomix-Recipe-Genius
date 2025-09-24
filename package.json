@@ -1,14 +1,24 @@
-{
-  "name": "thermomix-recipe-genius",
-  "private": true,
-  "version": "0.0.0",
-  "description": "Thermomix Recipe Genius: AI-powered recipe generation with precision weight measurements for Thermomix TM6",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview",
-    "test": "vitest",
+{{
+
+  "name": "thermomix-recipe-genius-monorepo",  "name": "thermomix-recipe-genius",
+
+  "private": true,  "private": true,
+
+  "scripts": {  "version": "0.0.0",
+
+    "test:e2e": "playwright test",  "description": "Thermomix Recipe Genius: AI-powered recipe generation with precision weight measurements for Thermomix TM6",
+
+    "test:e2e:ui": "playwright test --ui"  "type": "module",
+
+  },  "scripts": {
+
+  "devDependencies": {    "dev": "vite",
+
+    "@playwright/test": "^1.47.2"    "build": "vite build",
+
+  }    "preview": "vite preview",
+
+}    "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run"
   },

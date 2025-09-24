@@ -1,5 +1,0 @@
-{
-  "name": "Thermomix Recipe Genius",
-  "description": "An application to generate new Thermomix TM6 recipes or convert any existing recipe into a Thermomix-compatible format, providing detailed, step-by-step instructions.",
-  "requestFramePermissions": []
-}

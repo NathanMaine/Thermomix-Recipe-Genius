@@ -1,0 +1,7 @@
+{
+  "name": "thermo-server-scripts",
+  "private": true,
+  "scripts": {
+    "dev": "uvicorn main:app --reload --port 7070"
+  }
+}
