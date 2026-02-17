@@ -143,6 +143,12 @@ make typecheck   # TypeScript
 - **E2E Testing**: Complete login → upload → verification flow
 - **JWT Authentication**: Secure token-based auth using Cookidoo's OAuth flow
 
+## Security Hardening (Feb 2026)
+
+- **JWT secret enforced**: `JWT_SECRET` must be set as an environment variable. The server will not start with a fallback/default secret. Generate one with: `python -c "import secrets; print(secrets.token_hex(32))"`
+- **Error messages sanitized**: 401 and 500 responses no longer include raw exception strings. Internal details are logged server-side only.
+- **`/docs` and `/redoc` disabled**: FastAPI auto-generated API docs are not exposed. Re-enable in development by removing `docs_url=None, redoc_url=None` from the `FastAPI()` constructor.
+
 ## Notes
 - Never store real credentials in the client; use the server endpoints.
 - Disclose clearly: this project is not affiliated with Vorwerk/Cookidoo.

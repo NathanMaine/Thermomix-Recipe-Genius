@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', '..', '.env'))
 print("Environment loaded")
 
-app = FastAPI(title="Thermomix Companion Server")
+app = FastAPI(title="Thermomix Companion Server", docs_url=None, redoc_url=None)
 print("FastAPI app created")
 
 # Add CORS middleware
@@ -25,7 +25,9 @@ print("FastAPI app created")
 # )
 print("CORS middleware commented out")
 
-JWT_SECRET = os.getenv("JWT_SECRET", "dev-secret")
+JWT_SECRET = os.getenv("JWT_SECRET")
+if not JWT_SECRET:
+    raise RuntimeError("JWT_SECRET environment variable is required. Generate one with: python -c \"import secrets; print(secrets.token_hex(32))\"")
 AUTH_STRATEGY = os.getenv("AUTH_STRATEGY", "web_jwt")
 COOKIDOO_HOST = os.getenv("COOKIDOO_HOST", "cookidoo.thermomix.com")
 COOKIDOO_LOCALE = os.getenv("COOKIDOO_LOCALE", "en-US")
@@ -197,7 +199,7 @@ def login(req: LoginReq):
 
         return {"token": session_token, "region": REGION, "mock": MOCK}
     except Exception as e:
-        raise HTTPException(status_code=401, detail=f"Authentication failed: {str(e)}")
+        raise HTTPException(status_code=401, detail="Authentication failed. Check credentials and try again.")
 
 @app.get("/test")
 def test():
@@ -299,7 +301,7 @@ def create_created_recipe(req: CreateRecipeReq):
             "id": recipe_id
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to create recipe: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to create recipe. Check server logs for details.")
 
 class ListReq(BaseModel):
     token: str
